@@ -11,8 +11,7 @@ export function Navbar() {
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       className="fixed top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-50 flex justify-between items-center bg-white/80 backdrop-blur-xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-full px-6 py-4"
     >
-      <div className="font-extrabold text-2xl tracking-tighter text-zinc-900 flex items-center gap-2">
-        <div className="w-3 h-3 bg-[#1a65ff] rounded-full animate-pulse"></div>
+      <div className="font-extrabold text-2xl tracking-tighter text-zinc-900">
         NovaBill.
       </div>
       <div className="hidden md:flex gap-8 font-bold text-sm text-zinc-500">
