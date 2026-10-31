@@ -1,12 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 9%;
-    --primary-blue: 217 91% 60%; /* The electric blue from the references */
+    --primary-blue: 217 91% 60%;
   }
 
   body {
