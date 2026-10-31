@@ -1,64 +1,128 @@
+'use client';
+
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { MousePointer2, Receipt, BarChart3, Store } from "lucide-react";
+import { MousePointer2, Receipt, BarChart3, ArrowRight, Database, Smartphone, ShieldCheck } from "lucide-react";
+
+// Animation orchestration variants
+const containerVariant = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.1 }
+  }
+};
+
+const itemVariant = {
+  hidden: { opacity: 0, y: 40 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-canvas-grid flex flex-col items-center justify-center px-4">
+    <main className="relative min-h-screen overflow-x-hidden bg-canvas-grid bg-white">
       
-      {/* Top Right Floating Nav Button */}
-      <div className="absolute top-6 right-6">
-        <Button className="rounded-full bg-zinc-900 text-white hover:bg-zinc-800 px-6 py-5 text-sm font-medium">
+      {/* Top Navigation Bar */}
+      <nav className="fixed top-0 left-0 right-0 p-6 flex justify-between items-center z-50 bg-white/50 backdrop-blur-md border-b border-zinc-100">
+        <div className="font-extrabold text-2xl tracking-tighter text-zinc-900">NovaBill.</div>
+        <Button className="rounded-full bg-zinc-900 text-white hover:bg-zinc-800 px-6 py-5 text-sm font-bold shadow-md">
           Merchant Login
         </Button>
-      </div>
+      </nav>
 
-      {/* Floating Element 1: Simulated Cursor */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-12 -translate-y-12 animate-pulse hidden md:block">
-        <MousePointer2 className="w-6 h-6 text-orange-500 fill-orange-500 -rotate-12" />
-        <div className="bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm absolute top-5 left-4">
-          Customer
-        </div>
-      </div>
-
-      {/* Floating Element 2: Floating Receipt Card */}
-      <div className="absolute bottom-1/4 left-1/5 md:left-32 rotate-6 bg-white border border-zinc-200 shadow-xl rounded-2xl p-4 w-48 hidden md:block">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
-            <Receipt className="w-4 h-4 text-zinc-600" />
-          </div>
-          <div className="text-xs font-semibold text-zinc-900">Table 4 Paid</div>
-        </div>
-        <div className="w-full h-1.5 bg-zinc-100 rounded-full mb-1"></div>
-        <div className="w-3/4 h-1.5 bg-zinc-100 rounded-full"></div>
-      </div>
-
-      {/* Floating Element 3: Analytics Notification */}
-      <div className="absolute top-1/3 right-1/4 md:right-32 -rotate-3 bg-white border border-zinc-200 shadow-xl rounded-full px-4 py-2 flex items-center gap-3 hidden md:flex">
-        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-        <span className="text-sm font-medium text-zinc-800">Peak hours updated</span>
-        <BarChart3 className="w-4 h-4 text-zinc-400" />
-      </div>
-
-      {/* Central Content */}
-      <div className="z-10 text-center max-w-3xl mx-auto flex flex-col items-center">
-        <h1 className="text-6xl md:text-8xl font-extrabold tracking-tighter text-zinc-900 mb-6 leading-[0.9]">
-          Billing that <br />
-          <span className="relative">
-             loves data.
-             {/* Text selection highlight effect from references */}
-             <div className="absolute -inset-1 bg-blue-100/50 -z-10 border border-blue-200"></div>
-          </span>
-        </h1>
+      {/* Hero Section */}
+      <section className="relative pt-40 pb-32 flex flex-col items-center justify-center px-4 min-h-screen">
         
-        <p className="text-lg md:text-xl text-zinc-500 font-medium max-w-lg mb-10 leading-relaxed">
-          Transform your static receipts into a high-quality, functional retention engine that aligns with your growth goals.
-        </p>
+        {/* Floating Multi-player Cursors (Infinite floating animation) */}
+        <motion.div 
+          animate={{ y: [0, -15, 0] }} 
+          transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+          className="absolute top-1/4 left-1/4 md:left-1/5 -translate-x-12 -translate-y-12 z-20 hidden md:block"
+        >
+          <MousePointer2 className="w-7 h-7 text-pink-500 fill-pink-500 -rotate-12 drop-shadow-md" />
+          <div className="bg-pink-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-sm absolute top-6 left-5 shadow-sm">
+            UX Designer
+          </div>
+        </motion.div>
 
-        <Button className="rounded-full bg-[#1a65ff] hover:bg-blue-700 text-white px-10 py-7 text-lg font-medium shadow-lg transition-transform hover:scale-105">
-          Start building ecosystem
-        </Button>
-      </div>
+        <motion.div 
+          animate={{ y: [0, 20, 0] }} 
+          transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1 }}
+          className="absolute bottom-1/3 right-1/4 md:right-1/5 z-20 hidden md:block"
+        >
+          <MousePointer2 className="w-7 h-7 text-orange-500 fill-orange-500 -rotate-12 drop-shadow-md" />
+          <div className="bg-orange-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-sm absolute top-6 left-5 shadow-sm">
+            Customer
+          </div>
+        </motion.div>
 
-    </main>
-  );
-}
+        {/* Floating UI Elements */}
+        <motion.div 
+          initial={{ opacity: 0, x: -50, rotate: 0 }}
+          animate={{ opacity: 1, x: 0, rotate: -6 }}
+          transition={{ delay: 0.8, type: "spring" }}
+          className="absolute left-8 md:left-24 bottom-1/4 bg-white border border-zinc-200 shadow-2xl rounded-2xl p-4 w-56 z-10"
+        >
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                <Receipt className="w-4 h-4 text-blue-600" />
+              </div>
+              <div>
+                <div className="text-xs font-bold text-zinc-900">Table 4</div>
+                <div className="text-[10px] text-zinc-500">Paid • 2 mins ago</div>
+              </div>
+            </div>
+            <div className="text-xs font-bold text-zinc-900">$24.50</div>
+          </div>
+          <div className="w-full h-1.5 bg-zinc-100 rounded-full mb-2"></div>
+          <div className="w-3/4 h-1.5 bg-zinc-100 rounded-full mb-4"></div>
+          <div className="bg-zinc-50 text-[10px] font-medium text-zinc-600 p-2 rounded border border-zinc-100 text-center">
+            Rating: ⭐️⭐️⭐️⭐️⭐️
+          </div>
+        </motion.div>
+
+        {/* Main Content with Staggered Reveal */}
+        <motion.div 
+          variants={containerVariant} 
+          initial="hidden" 
+          animate="show"
+          className="z-30 text-center max-w-4xl mx-auto flex flex-col items-center mt-10"
+        >
+          <motion.div variants={itemVariant} className="mb-6 flex items-center gap-2 bg-zinc-100 border border-zinc-200 px-4 py-1.5 rounded-full">
+            <span className="flex h-2 w-2 rounded-full bg-blue-600 animate-pulse"></span>
+            <span className="text-xs font-bold tracking-wide text-zinc-800 uppercase">Version 1.0 Live</span>
+          </motion.div>
+
+          <motion.h1 variants={itemVariant} className="text-6xl md:text-[7.5rem] font-extrabold tracking-tighter text-zinc-900 mb-6 leading-[0.9] flex flex-col items-center">
+            <span>Billing that</span>
+            <span className="relative inline-block mt-2">
+               loves data.
+               {/* The structural blue selection box from your references */}
+               <div className="absolute -inset-y-1 -inset-x-4 bg-[#1a65ff]/10 -z-10 border-2 border-[#1a65ff]">
+                 <div className="absolute -left-1.5 -top-1.5 w-3 h-3 bg-[#1a65ff] rounded-full"></div>
+                 <div className="absolute -right-1.5 -bottom-1.5 w-3 h-3 bg-[#1a65ff] rounded-full"></div>
+               </div>
+            </span>
+          </motion.h1>
+          
+          <motion.p variants={itemVariant} className="text-lg md:text-2xl text-zinc-500 font-medium max-w-2xl mb-10 leading-snug">
+            We transform your static paper receipts into a high-quality, functional retention engine that aligns with your growth goals.
+          </motion.p>
+
+          <motion.div variants={itemVariant} className="flex flex-col sm:flex-row gap-4 items-center">
+            <Button className="rounded-full bg-[#1a65ff] hover:bg-blue-700 text-white px-10 py-7 text-lg font-bold shadow-xl transition-all hover:scale-105">
+              Start building ecosystem
+            </Button>
+            <Button variant="outline" className="rounded-full bg-white border-2 border-zinc-200 text-zinc-800 hover:bg-zinc-50 px-10 py-7 text-lg font-bold transition-all">
+              View live demo
+            </Button>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* Scroll Reveal Feature Section */}
+      <motion.section 
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin
