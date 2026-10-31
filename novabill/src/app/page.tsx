@@ -1,69 +1,64 @@
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { MousePointer2, Receipt, BarChart3, Store } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="relative min-h-screen overflow-hidden bg-canvas-grid flex flex-col items-center justify-center px-4">
+      
+      {/* Top Right Floating Nav Button */}
+      <div className="absolute top-6 right-6">
+        <Button className="rounded-full bg-zinc-900 text-white hover:bg-zinc-800 px-6 py-5 text-sm font-medium">
+          Merchant Login
+        </Button>
+      </div>
+
+      {/* Floating Element 1: Simulated Cursor */}
+      <div className="absolute top-1/4 left-1/4 -translate-x-12 -translate-y-12 animate-pulse hidden md:block">
+        <MousePointer2 className="w-6 h-6 text-orange-500 fill-orange-500 -rotate-12" />
+        <div className="bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm absolute top-5 left-4">
+          Customer
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </div>
+
+      {/* Floating Element 2: Floating Receipt Card */}
+      <div className="absolute bottom-1/4 left-1/5 md:left-32 rotate-6 bg-white border border-zinc-200 shadow-xl rounded-2xl p-4 w-48 hidden md:block">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+            <Receipt className="w-4 h-4 text-zinc-600" />
+          </div>
+          <div className="text-xs font-semibold text-zinc-900">Table 4 Paid</div>
         </div>
-      </main>
-    </div>
+        <div className="w-full h-1.5 bg-zinc-100 rounded-full mb-1"></div>
+        <div className="w-3/4 h-1.5 bg-zinc-100 rounded-full"></div>
+      </div>
+
+      {/* Floating Element 3: Analytics Notification */}
+      <div className="absolute top-1/3 right-1/4 md:right-32 -rotate-3 bg-white border border-zinc-200 shadow-xl rounded-full px-4 py-2 flex items-center gap-3 hidden md:flex">
+        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+        <span className="text-sm font-medium text-zinc-800">Peak hours updated</span>
+        <BarChart3 className="w-4 h-4 text-zinc-400" />
+      </div>
+
+      {/* Central Content */}
+      <div className="z-10 text-center max-w-3xl mx-auto flex flex-col items-center">
+        <h1 className="text-6xl md:text-8xl font-extrabold tracking-tighter text-zinc-900 mb-6 leading-[0.9]">
+          Billing that <br />
+          <span className="relative">
+             loves data.
+             {/* Text selection highlight effect from references */}
+             <div className="absolute -inset-1 bg-blue-100/50 -z-10 border border-blue-200"></div>
+          </span>
+        </h1>
+        
+        <p className="text-lg md:text-xl text-zinc-500 font-medium max-w-lg mb-10 leading-relaxed">
+          Transform your static receipts into a high-quality, functional retention engine that aligns with your growth goals.
+        </p>
+
+        <Button className="rounded-full bg-[#1a65ff] hover:bg-blue-700 text-white px-10 py-7 text-lg font-medium shadow-lg transition-transform hover:scale-105">
+          Start building ecosystem
+        </Button>
+      </div>
+
+    </main>
   );
 }
