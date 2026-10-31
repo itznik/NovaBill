@@ -125,4 +125,35 @@ export default function Home() {
       <motion.section 
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.7, type: "spring", bounce: 0.3 }}
+        className="relative z-30 bg-zinc-900 text-white py-24 px-4 md:px-12 rounded-t-[3rem] shadow-2xl mt-[-50px]"
+      >
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tighter leading-none max-w-lg">
+              From zero <br/> to one.
+            </h2>
+            <p className="text-zinc-400 font-medium max-w-sm text-lg">
+              We work under a methodology that isolates high-throughput APIs from complex data processing.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { icon: Database, title: "Multi-Tenant Data", desc: "Strictly isolated MongoDB schemas for every franchise." },
+              { icon: Smartphone, title: "Zero-App Ecosystem", desc: "Digital receipts optimized for mobile WebViews." },
+              { icon: ShieldCheck, title: "Zero-Trust Security", desc: "Military-grade JWT authentication and hidden routing." },
+            ].map((feature, i) => (
+              <div key={i} className="bg-zinc-800/50 border border-zinc-700 p-8 rounded-3xl hover:bg-zinc-800 transition-colors">
+                <feature.icon className="w-10 h-10 text-[#1a65ff] mb-6" />
+                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                <p className="text-zinc-400 font-medium">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+    </main>
+  );
+}
