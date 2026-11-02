@@ -1,10 +1,39 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, MousePointer2, Zap, MoreHorizontal } from 'lucide-react';
+import { ArrowUpRight, MousePointer2, Zap, MoreHorizontal, Loader2, Receipt as ReceiptIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function AdminDashboard() {
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  // The function that fakes a cash register hitting our API
+  const simulateSale = async () => {
+    setIsGenerating(true);
+    try {
+      const res = await fetch('/api/receipts/ingest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: [
+            { name: 'Double Chocolate Waffle', quantity: 1, price: 15.00, total: 15.00 },
+            { name: 'Iced Caramel Latte', quantity: 2, price: 6.50, total: 13.00 }
+          ]
+        })
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        // Instantly open the newly generated receipt in a new tab!
+        window.open(data.url, '_blank');
+      }
+    } catch (error) {
+      alert("Failed to generate receipt.");
+    }
+    setIsGenerating(false);
+  };
+
   return (
     <div className="max-w-6xl mx-auto pb-20">
       
@@ -17,12 +46,17 @@ export default function AdminDashboard() {
           <p className="text-zinc-500 font-bold mt-2">Real-time telemetry for Belgian Waffle Co.</p>
         </div>
         <div className="hidden md:flex items-center gap-4">
-          <div className="bg-white border-2 border-zinc-200 rounded-full px-6 py-2 text-sm font-bold text-zinc-900 shadow-sm">
-            Last 30 Days
-          </div>
-          <Button className="rounded-full bg-[#1a65ff] hover:bg-blue-700 text-white font-bold px-6 py-2">
-            Export Report
+          
+          {/* THE NEW BUTTON */}
+          <Button 
+            onClick={simulateSale} 
+            disabled={isGenerating}
+            className="rounded-xl bg-zinc-900 hover:bg-black text-white font-bold px-6 py-5 shadow-lg flex items-center gap-2"
+          >
+            {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <ReceiptIcon className="w-4 h-4" />}
+            Generate Test Receipt
           </Button>
+
         </div>
       </header>
 
