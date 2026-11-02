@@ -1,44 +1,52 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Fingerprint, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 export default function AdminLogin() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevents the page from just refreshing
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setError("Portal key and email are required.");
+      return;
+    }
+
     setLoading(true);
     setError('');
 
     try {
-      alert("1. Button clicked. Contacting API...");
-      
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
 
+      // Prevent crashes if Vercel returns an HTML timeout error instead of JSON
+      const contentType = res.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error("Database connection timed out. Check MongoDB IP Whitelist.");
+      }
+
       const data = await res.json();
       
       if (res.ok) {
-        alert("2. API Success! Redirecting to Dashboard...");
-        window.location.href = '/admin';
+        // Use Next.js router for a smooth transition without flashing white
+        router.push('/admin');
       } else {
-        alert("2. API Rejected: " + (data.error || "Unknown Error"));
         setError(data.error || 'Authentication failed');
         setLoading(false);
       }
     } catch (err: any) {
-      alert("2. Network Crash: " + err.message);
-      setError('Network error. Secure connection failed.');
+      setError(err.message || 'Network error. Secure connection failed.');
       setLoading(false);
     }
   };
@@ -58,19 +66,23 @@ export default function AdminLogin() {
         <AnimatePresence>
           {error && (
             <motion.div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold px-4 py-3 rounded-xl flex items-center gap-2 mb-6">
-              <AlertCircle className="w-4 h-4" /> {error}
+              <AlertCircle className="w-4 h-4 shrink-0" /> 
+              <span>{error}</span>
             </motion.div>
           )}
         </AnimatePresence>
 
-        <form className="space-y-6" onSubmit={handleLogin}>
+        {/* 
+          FIX: Removed the <form> tag completely. 
+          We now use a standard <div> to prevent native browser refreshes. 
+        */}
+        <div className="space-y-6">
           <div className="space-y-2">
             <label className="text-xs font-bold text-zinc-400 uppercase">Operator Email</label>
             <Input 
               type="email" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
               disabled={loading}
               className="bg-zinc-900 border-zinc-800 text-white rounded-xl h-14 px-5"
             />
@@ -82,22 +94,20 @@ export default function AdminLogin() {
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
               disabled={loading}
               className="bg-zinc-900 border-zinc-800 text-white rounded-xl h-14 px-5"
             />
           </div>
 
-          {/* FIX: Explicit type="submit" added to guarantee form trigger */}
           <Button 
-            type="submit" 
+            onClick={handleLogin}
             disabled={loading}
             className="w-full h-14 rounded-xl bg-[#1a65ff] hover:bg-blue-600 text-white font-bold text-lg flex items-center justify-between px-6 transition-all group"
           >
             {loading ? 'Authenticating...' : 'Authenticate'}
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ArrowRight className="w-5 h-5" />}
           </Button>
-        </form>
+        </div>
       </motion.div>
     </main>
   );
