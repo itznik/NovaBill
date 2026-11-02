@@ -15,38 +15,35 @@ export async function POST(req: Request) {
 
     await connectToDatabase();
 
-    // 1. Find the user
     const admin = await AdminUser.findOne({ email, isActive: true }).lean();
     if (!admin) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    // 2. Verify the password hash
     const isValid = await bcrypt.compare(password, admin.passwordHash);
     if (!isValid) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    // 3. Sign the JWT payload
     const token = jwt.sign(
       { sub: admin._id, merchantId: admin.merchantId, role: admin.role },
-      process.env.JWT_SECRET as string,
+      process.env.JWT_SECRET || 'fallback_secret_for_dev',
       { expiresIn: '12h' }
     );
 
-    // 4. Set the HTTP-Only Cookie (Next.js 15 requires awaiting cookies)
+    // FIX: Relaxed cookie settings for Codespaces compatibility
     const cookieStore = await cookies();
     cookieStore.set('nova_auth', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 12, // 12 hours
+      sameSite: 'lax', // Changed from strict to lax
+      maxAge: 60 * 60 * 12,
       path: '/',
     });
 
     return NextResponse.json({ success: true, message: 'Authentication successful' }, { status: 200 });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('🔴 Login Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
