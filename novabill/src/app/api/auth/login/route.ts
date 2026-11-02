@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { connectToDatabase } from '@/lib/db';
@@ -31,17 +30,24 @@ export async function POST(req: Request) {
       { expiresIn: '12h' }
     );
 
-    // FIX: Relaxed cookie settings for Codespaces compatibility
-    const cookieStore = await cookies();
-    cookieStore.set('nova_auth', token, {
+    // 1. Create the successful response FIRST
+    const response = NextResponse.json(
+      { success: true, message: 'Authentication successful' }, 
+      { status: 200 }
+    );
+
+    // 2. Attach the cookie directly to the response object (This guarantees the browser saves it)
+    response.cookies.set({
+      name: 'nova_auth',
+      value: token,
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax', // Changed from strict to lax
+      secure: true, // Vercel always uses HTTPS
+      sameSite: 'lax',
       maxAge: 60 * 60 * 12,
       path: '/',
     });
 
-    return NextResponse.json({ success: true, message: 'Authentication successful' }, { status: 200 });
+    return response;
 
   } catch (error: any) {
     console.error('🔴 Login Error:', error);
