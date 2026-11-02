@@ -60,9 +60,9 @@ export default function AdminLogin() {
         <AnimatePresence>
           {error && (
             <motion.div 
-              initial={{ opacity: 0, height: 0, mb: 0 }} 
-              animate={{ opacity: 1, height: 'auto', mb: 24 }} 
-              exit={{ opacity: 0, height: 0, mb: 0 }}
+              initial={{ opacity: 0, height: 0, marginBottom: 0 }} 
+              animate={{ opacity: 1, height: 'auto', marginBottom: 24 }} 
+              exit={{ opacity: 0, height: 0, marginBottom: 0 }}
               className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold px-4 py-3 rounded-xl flex items-center gap-2"
             >
               <AlertCircle className="w-4 h-4" /> {error}
