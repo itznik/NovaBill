@@ -5,6 +5,7 @@ import { Merchant } from '@/models/Merchant';
 import { Store } from '@/models/Store';
 import { ReceiptUI } from '@/components/receipt/ReceiptUI';
 
+export const dynamic = 'force-dynamic';
 export default async function DigitalReceiptPage({ params }: { params: Promise<{ id: string }> }) {
   // Next.js 15 standard: Await the params object
   const resolvedParams = await params;
