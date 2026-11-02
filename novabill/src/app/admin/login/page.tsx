@@ -26,8 +26,8 @@ export default function AdminLogin() {
         body: JSON.stringify({ email, password })
       });
 
-      if (res.ok) {
-        router.push('/admin');
+            if (res.ok) {
+        window.location.href = '/admin'; // Forces a hard reload so the cookie registers
       } else {
         const data = await res.json();
         setError(data.error || 'Authentication failed');
