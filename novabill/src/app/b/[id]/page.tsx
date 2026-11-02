@@ -1,13 +1,15 @@
 import { notFound } from 'next/navigation';
+import { connection } from 'next/server';
 import { connectToDatabase } from '@/lib/db';
 import { Receipt } from '@/models/Receipt';
 import { Merchant } from '@/models/Merchant';
 import { Store } from '@/models/Store';
 import { ReceiptUI } from '@/components/receipt/ReceiptUI';
 
-export const dynamic = 'force-dynamic';
 export default async function DigitalReceiptPage({ params }: { params: Promise<{ id: string }> }) {
-  // Next.js 15 standard: Await the params object
+  // Opt into dynamic rendering safely in Next.js 15/16
+  await connection();
+
   const resolvedParams = await params;
   const receiptUuid = resolvedParams.id;
 
@@ -17,7 +19,7 @@ export default async function DigitalReceiptPage({ params }: { params: Promise<{
   const receiptDoc = await Receipt.findOne({ receiptUuid }).lean();
   
   if (!receiptDoc) {
-    notFound(); // Triggers the custom 404 page we designed earlier
+    notFound(); 
   }
 
   // 2. Fetch the associated tenant data
