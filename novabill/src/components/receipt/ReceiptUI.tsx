@@ -11,9 +11,18 @@ export function ReceiptUI({ receipt, merchant, store }: any) {
 
   // Simulated Apple Wallet / Download interaction
   const handleDownload = () => {
-    setIsDownloading(true);
-    setTimeout(() => setIsDownloading(false), 2000);
-  };
+  setIsDownloading(true);
+  
+  // Directly hit the Python microservice running on port 8000
+  // In production, this would route through your Next.js API or an Nginx proxy
+  const pythonEngineUrl = process.env.NODE_ENV === 'production' 
+    ? 'https://api.yourdomain.com/engine' 
+    : 'http://localhost:8000';
+    
+  window.open(`${pythonEngineUrl}/api/engine/pdf/${receipt.receiptUuid}`, '_blank');
+  
+  setTimeout(() => setIsDownloading(false), 1000);
+};
 
   return (
     <main className="min-h-screen bg-canvas-grid bg-zinc-50 flex flex-col items-center py-10 px-4 font-sans selection:bg-blue-200">
