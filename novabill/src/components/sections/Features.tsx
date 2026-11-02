@@ -5,7 +5,7 @@ import { Database, Smartphone, ShieldCheck, MousePointer2, Code2 } from "lucide-
 
 const fadeUpVariant = {
   hidden: { opacity: 0, y: 80 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, type: "spring", bounce: 0.3 } }
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, type: "spring" as const, bounce: 0.3 } }
 };
 
 export function Features() {
