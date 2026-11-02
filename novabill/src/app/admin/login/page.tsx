@@ -1,11 +1,44 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Fingerprint, ArrowRight } from 'lucide-react';
+import { Fingerprint, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 export default function AdminLogin() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (res.ok) {
+        router.push('/admin');
+      } else {
+        const data = await res.json();
+        setError(data.error || 'Authentication failed');
+        setLoading(false);
+      }
+    } catch (err) {
+      setError('Network error. Secure connection failed.');
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-zinc-900 flex items-center justify-center p-4 selection:bg-blue-500/30 relative overflow-hidden">
       
@@ -21,21 +54,59 @@ export default function AdminLogin() {
         </div>
 
         <h1 className="text-3xl font-extrabold tracking-tight text-white mb-2">Secure Portal</h1>
-        <p className="text-sm text-zinc-500 font-medium mb-10">Authorized personnel only. Passkey verification required.</p>
+        <p className="text-sm text-zinc-500 font-medium mb-8">Authorized personnel only. Passkey verification required.</p>
 
-        <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+        {/* Error State Module */}
+        <AnimatePresence>
+          {error && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0, mb: 0 }} 
+              animate={{ opacity: 1, height: 'auto', mb: 24 }} 
+              exit={{ opacity: 0, height: 0, mb: 0 }}
+              className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold px-4 py-3 rounded-xl flex items-center gap-2"
+            >
+              <AlertCircle className="w-4 h-4" /> {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <form className="space-y-6" onSubmit={handleLogin}>
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Operator Email</label>
+            <Input 
+              type="email" 
+              placeholder="admin@merchant.com" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+              className="bg-zinc-900 border-zinc-800 text-white rounded-xl h-14 px-5 focus-visible:ring-1 focus-visible:ring-[#1a65ff] focus-visible:ring-offset-0 placeholder:text-zinc-700 disabled:opacity-50"
+            />
+          </div>
+
           <div className="space-y-2">
             <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Portal Key</label>
             <Input 
               type="password" 
               placeholder="••••••••••••" 
-              className="bg-zinc-900 border-zinc-800 text-white rounded-xl h-14 px-5 focus-visible:ring-1 focus-visible:ring-[#1a65ff] focus-visible:ring-offset-0 placeholder:text-zinc-700"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={loading}
+              className="bg-zinc-900 border-zinc-800 text-white rounded-xl h-14 px-5 focus-visible:ring-1 focus-visible:ring-[#1a65ff] focus-visible:ring-offset-0 placeholder:text-zinc-700 disabled:opacity-50"
             />
           </div>
 
-          <Button className="w-full h-14 rounded-xl bg-[#1a65ff] hover:bg-blue-600 text-white font-bold text-lg flex items-center justify-between px-6 transition-all group">
-            Authenticate
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          <Button 
+            disabled={loading}
+            className="w-full h-14 rounded-xl bg-[#1a65ff] hover:bg-blue-600 text-white font-bold text-lg flex items-center justify-between px-6 transition-all group disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Authenticating...' : 'Authenticate'}
+            {loading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            )}
           </Button>
         </form>
 
