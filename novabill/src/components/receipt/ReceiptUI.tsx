@@ -16,10 +16,7 @@ export function ReceiptUI({ receipt, merchant, store }: any) {
     
     const fetchOffer = async () => {
       try {
-        const pythonUrl = process.env.NODE_ENV === 'production' 
-          ? 'https://api.yourdomain.com/engine' 
-          : 'http://localhost:8000';
-          
+        const pythonUrl = process.env.NEXT_PUBLIC_PYTHON_URL || 'http://localhost:8000';
         const res = await fetch(`${pythonUrl}/api/engine/ai/upsell/${receipt.customerId}`);
         const data = await res.json();
         setAiOffer(data);
@@ -33,8 +30,8 @@ export function ReceiptUI({ receipt, merchant, store }: any) {
 
   const handleDownload = () => {
     setIsDownloading(true);
-    const pythonEngineUrl = process.env.NODE_ENV === 'production' ? 'https://api.yourdomain.com/engine' : 'http://localhost:8000';
-    window.open(`${pythonEngineUrl}/api/engine/pdf/${receipt.receiptUuid}`, '_blank');
+    const pythonUrl = process.env.NEXT_PUBLIC_PYTHON_URL || 'http://localhost:8000';
+    window.open(`${pythonUrl}/api/engine/pdf/${receipt.receiptUuid}`, '_blank');
     setTimeout(() => setIsDownloading(false), 1000);
   };
 
